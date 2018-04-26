@@ -1,0 +1,164 @@
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+import sys
+
+VOID, ADD_PLANE, REMOVE_PLANE, MOTION_ON, MOTION_OFF, QUIT = list(range(6))
+
+def init():
+    glClearColor(0.0, 0.0, 0.0, 0.0)  # Set background color to black and opaque
+    glClearDepth(1.0)  # Set background depth to farthest
+    glEnable(GL_DEPTH_TEST)
+
+def square():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    glTranslatef(0.0,0.0,-20.0)#View changes of the cube can be done here
+    #glRotate(-90.0,0.0,1.0,0.0)
+    glBegin(GL_QUADS)
+    #TOP
+    glColor3f(0.0,1.0,0.0)# Green
+    glVertex3f(1.0,1.0,-1.0)
+    glVertex3f(-1.0,1.0,-1.0)
+    glVertex3f(-1.0,1.0,1.0)
+    glVertex3f(1.0,1.0,1.0)
+
+    #BOTTOM
+    glColor3f(1.0, 0.0, 0.0)  # RED
+    glVertex3f(1.0,-1.0,1.0)
+    glVertex3f(-1.0,-1.0,1.0)
+    glVertex3f(-1.0,-1.0,-1.0)
+    glVertex3f(1.0,-1.0,-1.0)
+
+    #FRONT
+    glColor3f(0.0, 0.0, 1.0)  # BLUE
+    glVertex3f(1.0, 1.0,1.0)
+    glVertex3f(-1.0, 1.0,1.0)
+    glVertex3f(-1.0,-1.0, 1.0)
+    glVertex3f(1.0,-1.0,1.0)
+
+    #BACK
+    glColor3f(1.0,0.5, 0.0)  # ORANGE
+    glVertex3f(1.0,-1.0, -1.0)
+    glVertex3f(-1.0,-1.0, -1.0)
+    glVertex3f(-1.0, 1.0,-1.0)
+    glVertex3f(1.0, 1.0,-1.0)
+
+    #LEFT
+    glColor3f(1.0, 1.0, 0.0)  #YELLOW
+    glVertex3f(-1.0, 1.0, 1.0)
+    glVertex3f(-1.0, 1.0, -1.0)
+    glVertex3f(-1.0,-1.0,-1.0)
+    glVertex3f(-1.0,-1.0, 1.0)
+
+    #RIGHT
+    glColor3f(1.0, 1.0, 1.0)  # Green
+    glVertex3f(1.0, 1.0, -1.0)
+    glVertex3f(1.0, 1.0, 1.0)
+    glVertex3f(1.0,-1.0, 1.0)
+    glVertex3f(1.0,-1.0,-1.0)
+
+    glEnd()
+    glutSwapBuffers()
+
+def add_plane():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    glTranslatef(-4.0, 0.0, -20.0)  # View changes of the cube can be done here
+    # glRotate(-90.0,0.0,1.0,0.0)
+    glBegin(GL_QUADS)
+    # TOP
+    glColor3f(0.0, 1.0, 0.0)  # Green
+    glVertex3f(1.0, 1.0, -1.0)
+    glVertex3f(-1.0, 1.0, -1.0)
+    glVertex3f(-1.0, 1.0, 1.0)
+    glVertex3f(1.0, 1.0, 1.0)
+
+    # BOTTOM
+    glColor3f(1.0, 0.0, 0.0)  # RED
+    glVertex3f(1.0, -1.0, 1.0)
+    glVertex3f(-1.0, -1.0, 1.0)
+    glVertex3f(-1.0, -1.0, -1.0)
+    glVertex3f(1.0, -1.0, -1.0)
+
+    # FRONT
+    glColor3f(0.0, 0.0, 1.0)  # BLUE
+    glVertex3f(1.0, 1.0, 1.0)
+    glVertex3f(-1.0, 1.0, 1.0)
+    glVertex3f(-1.0, -1.0, 1.0)
+    glVertex3f(1.0, -1.0, 1.0)
+
+    # BACK
+    glColor3f(1.0, 0.5, 0.0)  # ORANGE
+    glVertex3f(1.0, -1.0, -1.0)
+    glVertex3f(-1.0, -1.0, -1.0)
+    glVertex3f(-1.0, 1.0, -1.0)
+    glVertex3f(1.0, 1.0, -1.0)
+
+    # LEFT
+    glColor3f(1.0, 1.0, 0.0)  # YELLOW
+    glVertex3f(-1.0, 1.0, 1.0)
+    glVertex3f(-1.0, 1.0, -1.0)
+    glVertex3f(-1.0, -1.0, -1.0)
+    glVertex3f(-1.0, -1.0, 1.0)
+
+    # RIGHT
+    glColor3f(1.0, 1.0, 1.0)  # Green
+    glVertex3f(1.0, 1.0, -1.0)
+    glVertex3f(1.0, 1.0, 1.0)
+    glVertex3f(1.0, -1.0, 1.0)
+    glVertex3f(1.0, -1.0, -1.0)
+    glEnd()
+
+
+    return
+
+def remove_plane():
+    return 0
+
+def domotion_on():
+    return 0
+
+def domotion_off():
+    return 0
+
+def doquit():
+    sys.exit(0)
+    return
+
+menudict = {ADD_PLANE: add_plane,
+            REMOVE_PLANE: remove_plane,
+            MOTION_ON: domotion_on,
+            MOTION_OFF: domotion_off,
+            QUIT: doquit}
+def reshape(w,h):
+    if(h==0):
+        h=1
+    aspect=w/h
+    glViewport(0,0,w,h)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(45.0,aspect,0.1,100.0)
+
+def menu(item):
+    menudict[item]()
+    return 0
+
+if __name__=="__main__":
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_DOUBLE)
+    glutInitWindowPosition(50, 100)
+    glutInitWindowSize(640, 480)
+    glutCreateWindow(b'Square')
+    glutDisplayFunc(square)
+    glutCreateMenu(menu)
+    glutAddMenuEntry("Add Cube", ADD_PLANE)
+    glutAddMenuEntry("Remove plane", REMOVE_PLANE)
+    glutAddMenuEntry("Motion", MOTION_ON)
+    glutAddMenuEntry("Quit", QUIT)
+    glutAttachMenu(GLUT_RIGHT_BUTTON)
+    glutReshapeFunc(reshape)
+    init()
+    glutMainLoop()
